@@ -7,6 +7,8 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import { useTheme } from '@/app/contexts/theme';
+import { TOGGLE_THEME } from '@/app/actions/type';
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
@@ -21,6 +23,11 @@ const links = [
 
 export default function NavLinks() {
   const pathname = usePathname();
+  const { theme, dispatch } = useTheme();
+
+  function onThemeToggle() {
+    dispatch({ type: TOGGLE_THEME });
+  }
   return (
     <>
       {links.map((link) => {
@@ -41,6 +48,14 @@ export default function NavLinks() {
           </Link>
         );
       })}
+      <p>Current theme: {theme}</p>
+      <button
+        type="button"
+        onClick={onThemeToggle}
+        className="flex h-10 items-center rounded-lg bg-blue-500 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+      >
+        Toggle theme
+      </button>
     </>
   );
 }

@@ -1,6 +1,7 @@
 import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
 import { Metadata } from 'next';
+import { ThemeProvider } from './contexts/theme';
  
 export const metadata: Metadata = {
   title: {
@@ -18,7 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <ThemeProvider>
+        <body className={`${inter.className} antialiased`}>{children}</body>
+      </ThemeProvider>
     </html>
   );
 }

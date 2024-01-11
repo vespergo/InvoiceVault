@@ -23,6 +23,7 @@ const links = [
     href: '/dashboard/invoices',
     icon: DocumentDuplicateIcon,
   },
+  { name: 'Revenues', href: '/dashboard/revenues', icon: CurrencyDollarIcon },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
   { name: 'Tax Settings', href: '/dashboard/tax', icon: CurrencyDollarIcon },
   { name: 'Backup & Export', href: '/dashboard/backup', icon: ArrowPathRoundedSquareIcon },

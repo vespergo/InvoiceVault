@@ -7,6 +7,7 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
+  FormattedRevenueTable,
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -225,6 +226,29 @@ export async function fetchFilteredCustomers(query: string) {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch customer table.');
+  }
+}
+
+export async function fetchFilteredRevenue(query: string) {
+  noStore();
+  try {
+    const data = await sql<FormattedRevenueTable>`
+		SELECT
+		  month,
+      revenue
+		FROM revenue
+		WHERE
+		  month ILIKE ${`%${query}%`};
+	  `;
+
+    const revenues = data.rows.map((revenue) => ({
+      ...revenue
+    }));
+
+    return revenues;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch revenue table.');
   }
 }
 

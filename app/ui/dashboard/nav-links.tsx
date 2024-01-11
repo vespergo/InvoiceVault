@@ -56,7 +56,7 @@ const links: Link[] = [
     ]
    },
   { name: 'Data Export and Deletion', href: '/dashboard/data-export', icon: ArrowPathIcon, sublinks: [], },
-  { name: 'Feedback and Suggestions', href: '/dashboard/feedback', icon: ChatBubbleBottomCenterIcon, sublinks: [], },
+  { name: 'Feedback and Suggestions', href: '/dashboard/feedbacks', icon: ChatBubbleBottomCenterIcon, sublinks: [], },
   { name: 'Settings', href: '/dashboard/settings', icon: Cog8ToothIcon, sublinks: [], },
   { name: 'FAQ', href: '/dashboard/faqs', icon: ChatBubbleLeftRightIcon, sublinks: [], },
 ];
@@ -68,6 +68,8 @@ export default function NavLinks() {
 
   // Function to handle submenu toggle
   const toggleSubMenu = (link: Link) => {
+    if(link.sublinks.length === 0) return;
+    
     if (currentParentLink === link) {
       setIsSubMenuOpen(!isSubMenuOpen);
     } else {

@@ -18,7 +18,7 @@ export default async function Page() {
           <h1 className={`${lusitana.className} text-2xl`}>User Roles</h1>
 
           <Button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" >
-          <PlusIcon className="ml-auto h-5 w-5 text-gray-50" /> Add Role
+            <PlusIcon className="ml-auto h-5 w-5 text-gray-50" /> Add Role
           </Button>
         </div>
          <div>

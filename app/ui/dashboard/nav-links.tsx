@@ -3,7 +3,13 @@ import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
-  Cog8ToothIcon
+  Cog8ToothIcon,
+  CurrencyDollarIcon,
+  ArrowPathIcon,
+  ArrowPathRoundedSquareIcon,
+  UserPlusIcon,
+  ChatBubbleBottomCenterIcon,
+  ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -18,7 +24,13 @@ const links = [
     icon: DocumentDuplicateIcon,
   },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
+  { name: 'Tax Settings', href: '/dashboard/tax', icon: CurrencyDollarIcon },
+  { name: 'Backup & Export', href: '/dashboard/backup', icon: ArrowPathRoundedSquareIcon },
+  { name: 'Roles & Permission', href: '/dashboard/roles', icon: UserPlusIcon },
+  { name: 'Data Export and Deletion', href: '/dashboard/data-export', icon: ArrowPathIcon },
+  { name: 'Feedback and Suggestions', href: '/dashboard/feedback', icon: ChatBubbleBottomCenterIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: Cog8ToothIcon },
+  { name: 'FAQ', href: '/dashboard/faqs', icon: ChatBubbleLeftRightIcon },
 ];
 
 export default function NavLinks() {

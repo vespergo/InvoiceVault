@@ -2,7 +2,7 @@ import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
 import { Metadata } from 'next';
 import { ThemeProvider } from './contexts/theme';
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 export const metadata: Metadata = {
   title: {
     template: '%s | Acme Dashboard',

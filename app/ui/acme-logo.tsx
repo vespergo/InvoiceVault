@@ -7,8 +7,12 @@ export default function AcmeLogo() {
     <div
       className={`${lusitana.className} flex flex-row items-center leading-none text-white`}
     >
-      <Image src='/InvoiceVault.png' alt="InvoiceVault Logo" width={150} height={150} />
-      
+      <Image
+        src="/InvoiceVault.png"
+        alt="InvoiceVault Logo"
+        width={150}
+        height={150}
+      />
     </div>
   );
 }

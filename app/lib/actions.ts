@@ -126,7 +126,7 @@ const publicDirectory = path.join(process.cwd(), 'public');
 const customersDirectory = path.join(publicDirectory, 'customers');
 
 const CustomerFormSchema = z.object({
-  id: z.string(), // Assuming ID is required
+  id: z.string(),
   name: z.string().min(1, "Please enter name"),
   email: z.string().min(1, "Please enter email"),
   image_url: z.string().min(1, "Image URL is required")

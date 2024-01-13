@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 import fs from 'fs/promises';
 import path from 'path';
-import { ImageFile } from '../types/files';
+import { ImageFile } from '@/app/types/files';
 
 const FormSchema = z.object({
   id: z.string(),

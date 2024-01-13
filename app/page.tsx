@@ -1,11 +1,11 @@
-import AcmeLogo from '@/app/ui/acme-logo';
+import Logo from '@/app/ui/logo';
 
 import Link from 'next/link';
 
 export default function Page() {
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-gray-100">
-      <AcmeLogo />
+      <Logo />
       <h1 className="mb-6 text-4xl font-bold text-gray-800">
         Welcome to InvoiceVault
       </h1>

@@ -63,7 +63,7 @@ export default function CustomerForm() {
               ))}
           </div>
         </div>
-        {/* Customer Name */}
+        {/* Customer Image */}
         <div className="mb-4">
           <label htmlFor="image_url" className="mb-2 block text-sm font-medium">
             Customer Image

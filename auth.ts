@@ -38,4 +38,11 @@ export const { auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token, user }) {
+      // @ts-ignore
+      session.user_id = token.sub
+      return session
+    }
+  }
 });

@@ -6,6 +6,8 @@ import Pagination from '@/app/ui/invoices/pagination';
 import { lusitana } from '@/app/ui/fonts';
 import Search from '@/app/ui/search';
 import { CreateCustomer } from '@/app/ui/customers/buttons';
+import { auth } from '@/auth';
+
 export const metadata: Metadata = {
   title: 'Customers',
 };
@@ -14,10 +16,12 @@ export default async function Page({
 }: {
   searchParams?: { query?: string; page?: string };
 }) {
+  const session = await auth();
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const totalPages = 1;
-  const customers = await fetchFilteredCustomers(query);
+  // @ts-ignore
+  const customers = await fetchFilteredCustomers(query, session.user_id);
 
   return (
     <div className="w-full">

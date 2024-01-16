@@ -194,7 +194,7 @@ export async function fetchCustomers() {
   }
 }
 
-export async function fetchFilteredCustomers(query: string) {
+export async function fetchFilteredCustomers(query: string, userId: string) {
   noStore();
   try {
     const data = await sql<CustomersTableType>`
@@ -209,8 +209,9 @@ export async function fetchFilteredCustomers(query: string) {
 		FROM customers
 		LEFT JOIN invoices ON customers.id = invoices.customer_id
 		WHERE
-		  customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`}
+		  (customers.name ILIKE ${`%${query}%`} OR
+      customers.email ILIKE ${`%${query}%`}) AND
+      customers.user_id = ${`${userId}`}
 		GROUP BY customers.id, customers.name, customers.email, customers.image_url
 		ORDER BY customers.name ASC
 	  `;

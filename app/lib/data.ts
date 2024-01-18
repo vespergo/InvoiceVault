@@ -194,6 +194,15 @@ export async function fetchCustomers() {
   }
 }
 
+export async function fetchUsers(query: string) {
+  noStore();
+  try {
+
+  } catch (err) {
+    
+  }
+}
+
 export async function fetchFilteredCustomers(query: string) {
   noStore();
   try {

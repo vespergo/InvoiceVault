@@ -19,6 +19,7 @@ const links = [
   },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: Cog8ToothIcon },
+  { name: 'Users', href: '/dashboard/users', icon: UserGroupIcon }
 ];
 
 export default function NavLinks() {

@@ -5,6 +5,7 @@ import { signIn } from '@/auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
+import bcrypt from 'bcrypt';
 
 import fs from 'fs/promises';
 import path from 'path';
@@ -131,6 +132,13 @@ const CustomerFormSchema = z.object({
   image_url: z.string().min(1, 'Image URL is required'),
 });
 
+const UserFormSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, 'Please enter name'),
+  email: z.string().min(1, 'Please enter email'),
+  password: z.string().min(1, 'Please enter email'),
+});
+
 export type CustomerState = {
   errors?: {
     name?: string[];
@@ -140,6 +148,94 @@ export type CustomerState = {
   message?: string | null;
 };
 const CreateCustomer = CustomerFormSchema.omit({ id: true, date: true });
+
+export type UserState = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+    password?: string[];
+  };
+  message?: string | null;
+};
+
+const CreateUser = UserFormSchema.omit({ id: true, date: true });
+
+export async function createUser(prevState: UserState, formData: FormData) {
+  // Extract fields from formData
+  const name = formData.get('name');
+  const email = formData.get('email');
+  const password = formData.get('password');
+  // const imageFile = formData.get('image_url');
+
+  // Validate fields first
+  const validatedFields = CreateUser.safeParse({
+    name,
+    email,
+    password,
+    // image_url: imageFile ? 'placeholder' : '',
+  });
+
+  if (!validatedFields.success) {
+    return {
+      ...prevState,
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Customers.',
+    };
+  }
+
+  // let relativeImagePath = null;
+  // if (imageFile && imageFile instanceof File) {
+  //   if (!imageFile.name.toLowerCase().endsWith('.png')) {
+  //     return {
+  //       errors: {...prevState.errors, image_url: ['Only PNG files are allowed']},
+  //       message: 'Invalid file format. Only PNG files are allowed.',
+  //     };
+  //   }
+
+  //   // Ensure the customers directory exists
+  //   await fs.mkdir(customersDirectory, { recursive: true });
+
+  //   // Generate a unique file name to prevent overwriting images
+  //   const fileName = `${new Date().getTime()}-${imageFile.name}`;
+  //   const savedImagePath = path.join(customersDirectory, fileName);
+
+  //   // Write the file
+  //   const fileData = new Uint8Array(await imageFile.arrayBuffer());
+  //   await fs.writeFile(savedImagePath, fileData);
+
+  //   // Set the relative path for storing in the database
+  //   relativeImagePath = `/customers/${fileName}`;
+  // } else {
+  //   // Handle case where image file is not provided
+  //   return {
+  //     errors: {...prevState.errors, image_url: ['Image file is required']},
+  //     message: 'Missing Fields. Failed to Create Customers.',
+  //   };
+  // }
+
+  // If everything is fine, proceed to insert into the database
+  const {
+    name: validatedName,
+    email: validatedEmail,
+    password: validatedPassword,
+  } = validatedFields.data;
+
+  const hashPassword = await bcrypt.hash(validatedPassword, 10);
+
+  try {
+    await sql`
+      INSERT INTO users (name, email, password)
+      VALUES (${validatedName}, ${validatedEmail}, ${hashPassword})
+    `;
+  } catch (error) {
+    return {
+      message: 'Database Error: Failed to Create Customer.',
+    };
+  }
+
+  revalidatePath('/dashboard/users');
+  redirect('/dashboard/users');
+}
 
 export async function createCustomer(
   prevState: CustomerState,

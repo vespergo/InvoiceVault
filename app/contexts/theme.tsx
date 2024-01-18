@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useReducer, ReactNode } from 'react';
+import { createContext, useContext, useReducer, ReactNode ,useLayoutEffect} from 'react';
 
 import { TOGGLE_THEME } from '@/app/actions/type';
 import { DARK, LIGHT } from '@/app/constants/theme';
@@ -27,6 +27,10 @@ type ThemeProviderProps = {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, dispatch] = useReducer(themeReducer, LIGHT);
 
+useLayoutEffect(()=>{
+  
+  document.body.className = theme;
+},[theme])
   return (
     <ThemeContext.Provider value={{ theme, dispatch }}>
       {children}

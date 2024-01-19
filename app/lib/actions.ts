@@ -9,7 +9,7 @@ import bcrypt from 'bcrypt';
 
 import fs from 'fs/promises';
 import path from 'path';
-
+import { ImageFile } from '@/app/types/files';
 
 const FormSchema = z.object({
   id: z.string(),
@@ -24,7 +24,6 @@ const FormSchema = z.object({
   }),
   date: z.string(),
 });
-
 
 export type State = {
   errors?: {
@@ -128,16 +127,16 @@ const customersDirectory = path.join(publicDirectory, 'customers');
 
 const CustomerFormSchema = z.object({
   id: z.string(),
-  name: z.string().min(1, "Please enter name"),
-  email: z.string().min(1, "Please enter email"),
-  image_url: z.string().min(1, "Image URL is required")
+  name: z.string().min(1, 'Please enter name'),
+  email: z.string().min(1, 'Please enter email'),
+  image_url: z.string().min(1, 'Image URL is required'),
 });
 
 const UserFormSchema = z.object({
   id: z.string(),
-  name: z.string().min(1, "Please enter name"),
-  email: z.string().min(1, "Please enter email"),
-  password: z.string().min(1, "Please enter email"),
+  name: z.string().min(1, 'Please enter name'),
+  email: z.string().min(1, 'Please enter email'),
+  password: z.string().min(1, 'Please enter email'),
 });
 
 export type CustomerState = {
@@ -161,8 +160,6 @@ export type UserState = {
 
 const CreateUser = UserFormSchema.omit({ id: true, date: true });
 
-
-
 export async function createUser(prevState: UserState, formData: FormData) {
   // Extract fields from formData
   const name = formData.get('name');
@@ -174,10 +171,10 @@ export async function createUser(prevState: UserState, formData: FormData) {
   const validatedFields = CreateUser.safeParse({
     name,
     email,
-    password
+    password,
     // image_url: imageFile ? 'placeholder' : '',
   });
-  
+
   if (!validatedFields.success) {
     return {
       ...prevState,
@@ -217,7 +214,11 @@ export async function createUser(prevState: UserState, formData: FormData) {
   // }
 
   // If everything is fine, proceed to insert into the database
-  const { name: validatedName, email: validatedEmail, password: validatedPassword } = validatedFields.data;
+  const {
+    name: validatedName,
+    email: validatedEmail,
+    password: validatedPassword,
+  } = validatedFields.data;
 
   const hashPassword = await bcrypt.hash(validatedPassword, 10);
 
@@ -236,11 +237,14 @@ export async function createUser(prevState: UserState, formData: FormData) {
   redirect('/dashboard/users');
 }
 
-
-export async function createCustomer(prevState: CustomerState, formData: FormData) {
+export async function createCustomer(
+  prevState: CustomerState,
+  formData: FormData,
+) {
   // Extract fields from formData
   const name = formData.get('name');
   const email = formData.get('email');
+  // This will be either FormDataEntryValue<ImageFile> | null
   const imageFile = formData.get('image_url');
 
   // Validate fields first
@@ -249,7 +253,7 @@ export async function createCustomer(prevState: CustomerState, formData: FormDat
     email,
     image_url: imageFile ? 'placeholder' : '',
   });
-  
+
   if (!validatedFields.success) {
     return {
       ...prevState,
@@ -259,10 +263,14 @@ export async function createCustomer(prevState: CustomerState, formData: FormDat
   }
 
   let relativeImagePath = null;
-  if (imageFile && imageFile instanceof File) {
-    if (!imageFile.name.toLowerCase().endsWith('.png')) {
+  if (imageFile) {
+    const imgFile = imageFile as ImageFile;
+    if (!imgFile.name.toLowerCase().endsWith('.png')) {
       return {
-        errors: {...prevState.errors, image_url: ['Only PNG files are allowed']},
+        errors: {
+          ...prevState.errors,
+          image_url: ['Only PNG files are allowed'],
+        },
         message: 'Invalid file format. Only PNG files are allowed.',
       };
     }
@@ -271,11 +279,11 @@ export async function createCustomer(prevState: CustomerState, formData: FormDat
     await fs.mkdir(customersDirectory, { recursive: true });
 
     // Generate a unique file name to prevent overwriting images
-    const fileName = `${new Date().getTime()}-${imageFile.name}`;
+    const fileName = `${new Date().getTime()}-${imgFile.name}`;
     const savedImagePath = path.join(customersDirectory, fileName);
 
     // Write the file
-    const fileData = new Uint8Array(await imageFile.arrayBuffer());
+    const fileData = new Uint8Array(await imgFile.arrayBuffer());
     await fs.writeFile(savedImagePath, fileData);
 
     // Set the relative path for storing in the database
@@ -283,7 +291,7 @@ export async function createCustomer(prevState: CustomerState, formData: FormDat
   } else {
     // Handle case where image file is not provided
     return {
-      errors: {...prevState.errors, image_url: ['Image file is required']},
+      errors: { ...prevState.errors, image_url: ['Image file is required'] },
       message: 'Missing Fields. Failed to Create Customers.',
     };
   }
